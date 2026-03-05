@@ -1,31 +1,57 @@
-import { Elysia, t } from "elysia";
-import { openapi } from "@elysiajs/openapi";
+import { Elysia, t } from "elysia"
+import { openapi } from "@elysiajs/openapi"
 
 const app = new Elysia()
-  .use(openapi())
+.use(openapi())
 
-  .get(
-    "/admin",
-    () => {
-      return {
-        stats: 99
-      };
-    },
-    {
-      beforeHandle({ headers, set }) {
+// =======================
+// PRAKTIKUM 5 - beforeHandle
+// =======================
+.get(
+  "/admin",
+  () => {
+    return {
+      stats: 99
+    }
+  },
+  {
+    beforeHandle({ headers, set }) {
 
-        if (headers.authorization !== "Bearer 123") {
-          set.status = 401
+      if (headers.authorization !== "Bearer 123") {
 
-          return {
-            success: false,
-            message: "Unauthorized"
-          }
+        set.status = 401
+
+        return {
+          success: false,
+          message: "Unauthorized"
         }
 
       }
+
     }
-  )
+  }
+)
+
+
+// =======================
+// PRAKTIKUM 6 - afterHandle
+// =======================
+
+// afterHandle GLOBAL
+.onAfterHandle(({ response }) => {
+  return {
+    success: true,
+    message: "data tersedia",
+    data: response
+  }
+})
+
+.get("/product", () => {
+  return {
+    id: 1,
+    name: "Laptop"
+  }
+})
 
   .listen(3000);
 
