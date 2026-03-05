@@ -4,7 +4,6 @@ import { openapi } from "@elysiajs/openapi";
 const app = new Elysia()
   .use(openapi())
 
-  // PRAKTIKUM 1
   .post(
     "/request",
     ({ body }) => {
@@ -18,45 +17,6 @@ const app = new Elysia()
         name: t.String({ minLength: 3 }),
         email: t.String({ format: "email" }),
         age: t.Number({ minimum: 18 })
-      })
-    }
-  )
-
-  // PRAKTIKUM 2
-  .get(
-    "/products/:id",
-    ({ params, query }) => {
-      return {
-        productId: params.id,
-        sort: query.sort
-      };
-    },
-    {
-      params: t.Object({
-        id: t.Number()
-      }),
-      query: t.Object({
-        sort: t.Union([
-          t.Literal("asc"),
-          t.Literal("desc")
-        ])
-      })
-    }
-  )
-
-  // PRAKTIKUM 3
-  .get(
-    "/stats",
-    () => {
-      return {
-        total: 100,
-        active: 80
-      };
-    },
-    {
-      response: t.Object({
-        total: t.Number(),
-        active: t.Number()
       })
     }
   )
