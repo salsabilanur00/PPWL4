@@ -1,18 +1,32 @@
-import { Elysia } from "elysia"
+import { Elysia, t } from "elysia";
 import { openapi } from "@elysiajs/openapi";
 
-
 const app = new Elysia()
-.use(openapi())
-// Global Logger
-app.onRequest(({ request }) => {
- console.log("📥", request.method, request.url)
- console.log("🕒", new Date().toISOString())
-})
+  .use(openapi())
 
+  .get(
+    "/admin",
+    () => {
+      return {
+        stats: 99
+      };
+    },
+    {
+      beforeHandle({ headers, set }) {
 
-app.get("/", () => "Hello Middleware")
+        if (headers.authorization !== "Bearer 123") {
+          set.status = 401
 
+          return {
+            success: false,
+            message: "Unauthorized"
+          }
+        }
 
-app.listen(3000)
-console.log("Server running at http://localhost:3000")
+      }
+    }
+  )
+
+  .listen(3000);
+
+console.log("Server running at http://localhost:3000");
