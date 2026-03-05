@@ -4,6 +4,7 @@ import { openapi } from "@elysiajs/openapi";
 const app = new Elysia()
   .use(openapi())
 
+  // PRAKTIKUM 1
   .post(
     "/request",
     ({ body }) => {
@@ -21,6 +22,28 @@ const app = new Elysia()
     }
   )
 
+  // PRAKTIKUM 2
+  .get(
+    "/products/:id",
+    ({ params, query }) => {
+      return {
+        productId: params.id,
+        sort: query.sort
+      };
+    },
+    {
+      params: t.Object({
+        id: t.Number()
+      }),
+      query: t.Object({
+        sort: t.Union([
+          t.Literal("asc"),
+          t.Literal("desc")
+        ])
+      })
+    }
+  )
+
   .listen(3000);
 
-console.log(`Elysia running at ${app.server?.hostname}:${app.server?.port}`);
+console.log(`🦊 Server running at http://localhost:3000`);
