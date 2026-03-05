@@ -53,6 +53,40 @@ const app = new Elysia()
   }
 })
 
-  .listen(3000);
 
-console.log("Server running at http://localhost:3000");
+// =======================
+// PRAKTIKUM 7 - onError
+// =======================
+.post(
+  "/login",
+  ({ body }) => {
+    return {
+      message: "Login success"
+    }
+  },
+  {
+    body: t.Object({
+      email: t.String({ format: "email" }),
+      password: t.String({ minLength: 8 })
+    })
+  }
+)
+
+.onError(({ code, set }) => {
+
+  if (code === "VALIDATION") {
+
+    set.status = 400
+
+    return {
+      success: false,
+      error: "Validation Error"
+    }
+
+  }
+
+})
+
+.listen(3000)
+
+console.log("Server running at http://localhost:3000")
